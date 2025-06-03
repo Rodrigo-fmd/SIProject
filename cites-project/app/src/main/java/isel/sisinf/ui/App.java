@@ -24,7 +24,13 @@ SOFTWARE.
 package isel.sisinf.ui;
 
 import isel.sisinf.jpa.Dal;
+import isel.sisinf.jpa.repo.JPAContext;
+import isel.sisinf.model.entities.Cliente;
+import isel.sisinf.model.entities.Doca;
+import isel.sisinf.model.entities.Passe;
+import isel.sisinf.model.entities.Pessoa;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.HashMap;
 
@@ -153,22 +159,62 @@ class UI
 
     private static final int TAB_SIZE = 24;
 
+    JPAContext ctxt = new JPAContext("cites-pu");
+
     private void createCostumer() {
-        // TODO
+        Pessoa p = new Pessoa();
+        Scanner s = new Scanner(System.in);
+
+        System.out.println("Insert your name:");
+        String name = s.nextLine();
+        p.setName(name);
+
+        System.out.println("Insert your email:");
+        String email = s.nextLine();
+        p.setEmail(email);
+
+        System.out.println("Insert your NIF (Tax Number):");
+        int taxNumber = Integer.parseInt(s.nextLine());
+        p.setTaxnumber(taxNumber);
+
+
+        ctxt.beginTransaction();
+        ctxt.getPessoas().Create(p);
+        ctxt.commit();
         System.out.println("createCostumer()");
     }
   
     private void listCostumer()
     {
-        // TODO
+        ctxt.beginTransaction();
+        List<Cliente> clientes = ctxt.getClientes().findAll();
+
+        System.out.printf("%-20s %-30s %-15s %-10s%n", "Name", "Email", "Tax Number", "Pass Type");
+        for (Cliente cliente : clientes) {
+            Pessoa pessoa = cliente.getPersonEntity();
+
+            List<Passe> passes = ctxt.getPasses().find("SELECT p FROM Passe p WHERE p.client.id = ?1", pessoa.getId());
+            String passType = passes.stream()
+                    .map(pass -> pass.getTypeofcard().getReference())
+                    .findFirst()
+                    .orElse("No Pass");
+
+            System.out.printf("%-30s %-40s %-15d %-10s%n",
+                    pessoa.getName(),
+                    pessoa.getEmail(),
+                    pessoa.getTaxnumber(),
+                    passType
+            );
+        }
+
+        ctxt.commit();
         System.out.println("listCostumer()");
     }
 
     private void listDocks()
     {
-        // TODO
+        // TODO()
         System.out.println("listDocks()");
-
     }
 
     private void startTrip() {
