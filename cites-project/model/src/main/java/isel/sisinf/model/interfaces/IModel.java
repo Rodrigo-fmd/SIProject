@@ -1,12 +1,12 @@
 package isel.sisinf.model.interfaces;
 
 public interface IModel {
-        int getId();
-        void setId(int id);
+        int getNumber();
+        void setNumber(int number);
 
-        String getNome();
-        void setNome(String nome);
+        String getDesignation();
+        void setDesignation(String designation);
 
-        int getAutonomiaFabrica();
-        void setAutonomiaFabrica(int autonomiaFabrica);
+        int getAutonomy();
+        void setAutonomy(int autonomy);
 }

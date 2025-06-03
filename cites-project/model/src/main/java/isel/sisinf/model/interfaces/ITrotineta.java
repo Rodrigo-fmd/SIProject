@@ -1,29 +1,24 @@
 package isel.sisinf.model.interfaces;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public interface ITrotineta {
     int getId();
     void setId(int id);
 
-    int getMaxSpeed();
-    void setMaxSpeed(int maxSpeed);
+    BigDecimal getWeight();
+    void setWeight(BigDecimal weight);
 
-    int getAutonomy();
-    void setAutonomy(int autonomy);
+    BigDecimal getMaxVelocity();
+    void setMaxVelocity(BigDecimal maxVelocity);
 
-    int getWeight();
-    void setWeight(int weight);
+    int getBattery();
+    void setBattery(int battery);
 
-    String getModel();
-    void setModel(String model);
+    IModel getModel();
+    void setModel(IModel model);
 
-    String getBrand();
-    void setBrand(String brand);
-
-    BigDecimal getPrice();
-    void setPrice(BigDecimal price);
-
-    IDoca getDoca();
-    void setDoca(IDoca doca);
+    Timestamp getVersion();
+    void setVersion(Timestamp version);
 }

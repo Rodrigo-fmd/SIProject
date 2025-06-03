@@ -1,38 +1,31 @@
 package isel.sisinf.model.entities;
 
-import isel.sisinf.model.interfaces.IDoca;
-import isel.sisinf.model.interfaces.IEstacao;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"estacao_id", "numero"})
-)
+@Table(name = "DOCK")
 @NamedQuery(
         name = "Doca.findByKey",
-        query = "SELECT d FROM Doca d WHERE d.id = :id"
+        query = "SELECT d FROM Doca d WHERE d.number = :number"
 )
-public class Doca implements IDoca {
+public class Doca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(nullable = false)
-    private int numero;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private String estado;
+    private int number;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "estacao_id", nullable = false)
-    private Estacao estacao;
+    @JoinColumn(name = "station", referencedColumnName = "id")
+    private Estacao station;
 
-    @Override
-    public IEstacao getEstacao() { return estacao; }
+    @Column(nullable = false, length = 30)
+    private String state;
 
-    @Override
-    public void setEstacao(IEstacao estacao) { this.estacao = (Estacao) estacao; }
+    @ManyToOne
+    @JoinColumn(name = "scooter", referencedColumnName = "id")
+    private Trotineta scooter;
+
+    @Column
+    private java.sql.Timestamp version;
 }

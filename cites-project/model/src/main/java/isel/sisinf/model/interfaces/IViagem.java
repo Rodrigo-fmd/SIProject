@@ -1,20 +1,32 @@
 package isel.sisinf.model.interfaces;
 
 import java.sql.Timestamp;
+import isel.sisinf.model.entities.Trotineta;
+import isel.sisinf.model.entities.Utilizador;
+import isel.sisinf.model.entities.Estacao;
 
 public interface IViagem {
-    int getId();
-    void setId(int id);
+    Timestamp getDinitial();
+    void setDinitial(Timestamp dinitial);
 
-    Timestamp getDataInicio();
-    void setDataInicio(Timestamp dataInicio);
+    Trotineta getScooter();
+    void setScooter(Trotineta scooter);
 
-    Timestamp getDataFim();
-    void setDataFim(Timestamp dataFim);
+    String getComment();
+    void setComment(String comment);
 
-    Integer getAvaliacao();
-    void setAvaliacao(Integer avaliacao);
+    Integer getEvaluation();
+    void setEvaluation(Integer evaluation);
 
-    String getMensagem();
-    void setMensagem(String mensagem);
+    Timestamp getDfinal();
+    void setDfinal(Timestamp dfinal);
+
+    Utilizador getClient();
+    void setClient(Utilizador client);
+
+    Estacao getStinitial();
+    void setStinitial(Estacao stinitial);
+
+    Estacao getStfinal();
+    void setStfinal(Estacao stfinal);
 }

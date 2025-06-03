@@ -1,27 +1,31 @@
 package isel.sisinf.model.entities;
 
-import isel.sisinf.model.interfaces.IPedidoReposicao;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.sql.Timestamp;
 
 @Data
 @Entity
-public class PedidoReposicao implements IPedidoReposicao {
+@Table(name = "REPLACEMENTORDER")
+@IdClass(PedidoReposicaoId.class)
+@NamedQuery(
+        name = "PedidoReposicao.findByKey",
+        query = "SELECT p FROM PedidoReposicao p WHERE p.dorder = :dorder AND p.station = :station"
+)
+public class PedidoReposicao {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(nullable = false)
+    private Timestamp dorder;
 
-    @Column(nullable = false, unique = true)
-    private Timestamp dataPedido;
+    @Id
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "station", referencedColumnName = "id")
+    private Estacao station;
 
-    private Timestamp dataReposicao;
+    @Column
+    private Timestamp dreplacement;
 
     @Column(nullable = false)
-    private int maxOcupacao;
-
-    @ManyToOne
-    @JoinColumn(name = "estacao_id", nullable = false)
-    private Estacao estacao;
+    private int roccupation;
 }

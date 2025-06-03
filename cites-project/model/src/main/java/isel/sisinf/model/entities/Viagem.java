@@ -1,42 +1,39 @@
 package isel.sisinf.model.entities;
 
-import isel.sisinf.model.interfaces.IViagem;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.sql.Timestamp;
 
 @Data
 @Entity
-public class Viagem implements IViagem {
+@Table(name = "TRAVEL")
+@IdClass(ViagemPK.class)
+public class Viagem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @Column(nullable = false)
-    private Timestamp dataInicio;
+    private Timestamp dinitial;
 
-    private Timestamp dataFim;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "scooter", referencedColumnName = "id", nullable = false)
+    private Trotineta scooter;
 
-    @Column
-    private Integer avaliacao;
+    @Column(length = 100)
+    private String comment;
 
-    @Column
-    private String mensagem;
+    private Integer evaluation;
+
+    private Timestamp dfinal;
 
     @ManyToOne
-    @JoinColumn(name = "estacao_inicio_id", nullable = false)
-    private Estacao estacaoInicio;
+    @JoinColumn(name = "client", referencedColumnName = "person", nullable = false)
+    private Utilizador client;
 
     @ManyToOne
-    @JoinColumn(name = "estacao_destino_id")
-    private Estacao estacaoDestino;
+    @JoinColumn(nullable = false)
+    private Estacao stinitial;
 
     @ManyToOne
-    @JoinColumn(name = "utilizador_nif", nullable = false)
-    private Utilizador utilizador;
-
-    @ManyToOne
-    @JoinColumn(name = "trotineta_id", nullable = false)
-    private Trotineta trotineta;
+    @JoinColumn
+    private Estacao stfinal;
 }

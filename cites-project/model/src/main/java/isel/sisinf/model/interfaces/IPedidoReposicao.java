@@ -3,15 +3,15 @@ package isel.sisinf.model.interfaces;
 import java.sql.Timestamp;
 
 public interface IPedidoReposicao {
-    int getId();
-    void setId(int id);
+    Timestamp getDorder();
+    void setDorder(Timestamp dorder);
 
-    Timestamp getDataPedido();
-    void setDataPedido(Timestamp dataPedido);
+    Timestamp getDreplacement();
+    void setDreplacement(Timestamp dreplacement);
 
-    Timestamp getDataReposicao();
-    void setDataReposicao(Timestamp dataReposicao);
+    int getRoccupation();
+    void setRoccupation(int roccupation);
 
-    int getMaxOcupacao();
-    void setMaxOcupacao(int maxOcupacao);
+    int getStation();
+    void setStation(int station);
 }

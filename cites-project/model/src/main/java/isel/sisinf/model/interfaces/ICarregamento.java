@@ -4,15 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public interface ICarregamento {
-    int getId();
-    void setId(int id);
+    Timestamp getDttopup();
+    void setDttopup(Timestamp dttopup);
 
-    Timestamp getData();
-    void setData(Timestamp data);
+    ICartao getCard();
+    void setCard(ICartao card);
 
-    BigDecimal getValor();
-    void setValor(BigDecimal valor);
-
-    IPasse getPasse();
-    void setPasse(IPasse passe);
+    BigDecimal getValue();
+    void setValue(BigDecimal value);
 }

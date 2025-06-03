@@ -1,15 +1,20 @@
 package isel.sisinf.model.interfaces;
 
+import java.sql.Timestamp;
+
 public interface IDoca {
-    int getId();
-    void setId(int id);
+    int getNumber();
+    void setNumber(int number);
 
-    int getNumero();
-    void setNumero(int numero);
+    IEstacao getStation();
+    void setStation(IEstacao station);
 
-    String getEstado();
-    void setEstado(String estado);
+    String getState();
+    void setState(String state);
 
-    IEstacao getEstacao();
-    void setEstacao(IEstacao estacao);
+    ITrotineta getScooter();
+    void setScooter(ITrotineta scooter);
+
+    Timestamp getVersion();
+    void setVersion(Timestamp version);
 }

@@ -1,26 +1,35 @@
 package isel.sisinf.model.entities;
 
-import isel.sisinf.model.interfaces.IReposicao;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.sql.Timestamp;
 
 @Data
 @Entity
-public class Reposicao implements IReposicao {
+@Table(name = "REPLACEMENT")
+@NamedQuery(
+        name = "Reposicao.findByKey",
+        query = "SELECT r FROM Reposicao r WHERE r.number = :number"
+)
+public class Reposicao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int numero;
+    private int number;
 
-    @Column(nullable = false)
-    private Timestamp data;
+    @Column(, nullable = false)
+    private Timestamp dreplacement;
+
+    @Column(length = 8)
+    private String action;
 
     @ManyToOne
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private PedidoReposicao pedido;
+    @JoinColumns({
+            @JoinColumn(name = "reporder", referencedColumnName = "dorder", nullable = false),
+            @JoinColumn(name = "repstation", referencedColumnName = "station", nullable = false)
+    })
+    private PedidoReposicao pedidoReposicao;
 
     @ManyToOne
-    @JoinColumn(name = "funcionario_nif", nullable = false)
+    @JoinColumn(name = "employee", referencedColumnName = "person", nullable = false)
     private Funcionario funcionario;
 }

@@ -1,26 +1,23 @@
 package isel.sisinf.model.entities;
 
-import isel.sisinf.model.interfaces.IFuncionario;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/////////////////////////
 @Data
 @Entity
-public class Funcionario implements IFuncionario {
+@Table(name = "EMPLOYEE")
+@NamedQuery(
+        name = "Funcionario.findByKey",
+        query = "SELECT f FROM Funcionario f WHERE f.person.id = :personId"
+)
+public class Funcionario {
     @Id
-    @Column(unique = true, nullable = false)
-    private String nif;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "person", referencedColumnName = "id")
+    private Utilizador person;
 
-    @Column(nullable = false)
-    private String nome;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(unique = true, nullable = false)
-    private int numero;
-
-    @OneToOne
-    @JoinColumn(name = "utilizador_nif", nullable = false)
-    private Utilizador utilizador;
+    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer number;
 }

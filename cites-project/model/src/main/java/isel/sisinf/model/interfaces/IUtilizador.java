@@ -1,19 +1,15 @@
 package isel.sisinf.model.interfaces;
 
-import isel.sisinf.model.entities.Passe;
-
 public interface IUtilizador {
-    public String getName();
-    public void setName(String name);
+    int getId();
+    void setId(int id);
 
-    public String getNif();
-    public void setNif(String nif);
+    String getEmail();
+    void setEmail(String email);
 
-    public String getEmail();
-    public void setEmail(String email);
+    int getTaxnumber();
+    void setTaxnumber(int taxnumber);
 
-    public String getRegistingDate();
-    public void setRegistingDate(String registingDate);
-
-    public Passe getPasse();
+    String getName();
+    void setName(String name);
 }
