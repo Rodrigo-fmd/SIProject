@@ -19,4 +19,8 @@ public class Funcionario implements IFuncionario {
 
     @Column(unique = true, nullable = false)
     private int numero;
+
+    @OneToOne
+    @JoinColumn(name = "utilizador_nif", nullable = false)
+    private Utilizador utilizador;
 }

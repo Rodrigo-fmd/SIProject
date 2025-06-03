@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package isel.sisinf.ui;
 
+import isel.sisinf.jpa.Dal;
+
 import java.util.Scanner;
 import java.util.HashMap;
 
@@ -184,7 +186,7 @@ class UI
     private void about()
     {
         // TODO: Add your Group ID & member names
-        System.out.println("DAL version:"+ isel.sisinf.jpa.Dal.version());
+        System.out.println("DAL version:"+ Dal.version());
         System.out.println("Core version:"+ isel.sisinf.model.Core.version());
         
     }
