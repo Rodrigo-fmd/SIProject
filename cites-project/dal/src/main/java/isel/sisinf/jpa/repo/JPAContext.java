@@ -26,6 +26,7 @@ public class JPAContext implements IContext {
     private final IPasseRepository passeRepo;
     private final IReposicaoRepository reposicaoRepo;
     private final ITipoDePasseRepository tipoDePasseRepo;
+    private final IClienteRepository clienteRepo;
 
     public JPAContext() {
         this("cites-pu");
@@ -46,6 +47,7 @@ public class JPAContext implements IContext {
         this.passeRepo = new PasseRepository();
         this.reposicaoRepo = new ReposicaoRepository();
         this.tipoDePasseRepo = new TipoDePasseRepository();
+        this.clienteRepo = new ClienteRepository();
     }
 
     // Métodos de transação
@@ -132,6 +134,9 @@ public class JPAContext implements IContext {
 
     @Override
     public ITipoDePasseRepository getTipoDePasses() { return tipoDePasseRepo; }
+
+    @Override
+    public IClienteRepository getClientes() { return clienteRepo; }
 
     @Override
     public void close() {
@@ -410,5 +415,28 @@ public class JPAContext implements IContext {
         public TipoDePasse Update(TipoDePasse entity) { return helperUpdate(entity); }
         @Override
         public TipoDePasse Delete(TipoDePasse entity) { return helperDelete(entity); }
+    }
+
+    protected class ClienteRepository implements IClienteRepository {
+        @Override
+        public Cliente findByKey(Integer key) {
+            return em.createNamedQuery("Cliente.findByKey", Cliente.class)
+                    .setParameter("personId", key)
+                    .getSingleResult();
+        }
+        @Override
+        public List<Cliente> findAll() {
+            return em.createNamedQuery("Cliente.findAll", Cliente.class).getResultList();
+        }
+        @Override
+        public List<Cliente> find(String jpql, Object... params) {
+            return helperQueryImpl(jpql, Cliente.class, params);
+        }
+        @Override
+        public Cliente Create(Cliente entity) { return helperCreate(entity); }
+        @Override
+        public Cliente Update(Cliente entity) { return helperUpdate(entity); }
+        @Override
+        public Cliente Delete(Cliente entity) { return helperDelete(entity); }
     }
 }

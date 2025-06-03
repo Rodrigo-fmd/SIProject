@@ -28,4 +28,5 @@ public interface IContext extends AutoCloseable {
     IReposicaoRepository getReposicoes();
     ITipoDePasseRepository getTipoDePasses();
     IPessoaRepository getPessoas();
+    IClienteRepository getClientes();
 }
