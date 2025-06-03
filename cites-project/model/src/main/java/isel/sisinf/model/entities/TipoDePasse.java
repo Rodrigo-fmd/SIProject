@@ -4,6 +4,8 @@ import isel.sisinf.model.interfaces.ITipoDePasse;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "TYPEOFCARD")
@@ -20,5 +22,5 @@ public class TipoDePasse implements ITipoDePasse {
     private Integer nodays;
 
     @Column(nullable = false, precision = 4, scale = 2)
-    private Double price;
+    private BigDecimal price;
 }

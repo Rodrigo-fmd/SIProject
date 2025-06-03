@@ -7,7 +7,7 @@ public interface ITipoDePasse {
     void setReference(String reference);
 
     int getNodays();
-    void setNodays(int nodays);
+    void setNodays(Integer nodays);
 
     BigDecimal getPrice();
     void setPrice(BigDecimal price);

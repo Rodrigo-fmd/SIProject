@@ -8,6 +8,10 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "SERVICECOST")
+@NamedQuery(
+        name = "CustoServico.findByKey",
+        query = "SELECT c FROM CustoServico c WHERE c.id = :id"
+)
 public class CustoServico implements ICustoServico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

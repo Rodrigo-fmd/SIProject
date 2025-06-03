@@ -7,6 +7,10 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "TOPUP")
+@NamedQuery(
+        name = "Carregamento.findByKey",
+        query = "SELECT c FROM Carregamento c WHERE c.id = :id"
+)
 public class Carregamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

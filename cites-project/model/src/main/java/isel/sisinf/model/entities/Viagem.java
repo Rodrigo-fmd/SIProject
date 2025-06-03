@@ -8,6 +8,11 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "TRAVEL")
 @IdClass(ViagemPK.class)
+@NamedQuery(
+    name = "Viagem.findByKey",
+    query = "SELECT v FROM Viagem v WHERE v.dinitial = :dinitial AND v.scooter.id = :scooter"
+)
+
 public class Viagem {
     @Id
     @Column(nullable = false)
