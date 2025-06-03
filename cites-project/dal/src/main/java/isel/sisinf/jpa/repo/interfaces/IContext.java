@@ -1,7 +1,6 @@
 package isel.sisinf.jpa.repo.interfaces;
 
-import isel.sisinf.model.interfaces.IPasse;
-import isel.sisinf.model.interfaces.IReferencia;
+
 
 public interface IContext extends AutoCloseable {
     enum IsolationLevel {
@@ -15,7 +14,7 @@ public interface IContext extends AutoCloseable {
     void commit();
     void flush();
     void clear();
-    void persist();
+    void persist(Object entity);
 
     IEstacaoRepository getEstacoes();
     IViagemRepository getViagens();
@@ -23,10 +22,10 @@ public interface IContext extends AutoCloseable {
     IUtilizadorRepository getUtilizadores();
     IFuncionarioRepository getFuncionarios();
     IDocaRepository getDocas();
-    IReferenciaRepository getReferencias();
     ICarregamentoRepository getCarregamentos();
     IPedidoReposicaoRepository getPedidos();
     IModeloRepository getModelos();
     IPasseRepository getPasses();
     IReposicaoRepository getReposicoes();
+    ITipoDePasseRepository getTipoDePasses();
 }

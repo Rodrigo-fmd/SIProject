@@ -10,6 +10,10 @@ import lombok.Data;
         name = "Trotineta.findByKey",
         query = "SELECT t FROM Trotineta t WHERE t.id = :id"
 )
+@NamedQuery(
+        name = "Trotineta.findAll",
+        query = "SELECT t FROM Trotineta t"
+)
 public class Trotineta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

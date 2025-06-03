@@ -12,7 +12,10 @@ import java.sql.Timestamp;
     name = "Viagem.findByKey",
     query = "SELECT v FROM Viagem v WHERE v.dinitial = :dinitial AND v.scooter.id = :scooter"
 )
-
+@NamedQuery(
+        name = "Viagem.findAll",
+        query = "SELECT v FROM Viagem v"
+)
 public class Viagem {
     @Id
     @Column(nullable = false)

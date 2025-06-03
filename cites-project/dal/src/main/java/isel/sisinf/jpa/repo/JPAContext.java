@@ -20,19 +20,19 @@ public class JPAContext implements IContext {
     private final IUtilizadorRepository utilizadorRepo;
     private final IFuncionarioRepository funcionarioRepo;
     private final IDocaRepository docaRepo;
-    private final IReferenciaRepository referenciaRepo;
     private final ICarregamentoRepository carregamentoRepo;
     private final IPedidoReposicaoRepository pedidoRepo;
     private final IModeloRepository modeloRepo;
     private final IPasseRepository passeRepo;
     private final IReposicaoRepository reposicaoRepo;
+    private final ITipoDePasseRepository tipoDePasseRepo;
 
     public JPAContext() {
         this("cites-pu");
     }
 
-    public JPAContext(String persistenceUnit) {
-        this.emf = Persistence.createEntityManagerFactory(persistenceUnit);
+    public JPAContext(String persistenceCtx) {
+        this.emf = Persistence.createEntityManagerFactory(persistenceCtx);
         this.em = emf.createEntityManager();
         this.estacaoRepo = new EstacaoRepository();
         this.viagemRepo = new ViagemRepository();
@@ -40,12 +40,12 @@ public class JPAContext implements IContext {
         this.utilizadorRepo = new UtilizadorRepository();
         this.funcionarioRepo = new FuncionarioRepository();
         this.docaRepo = new DocaRepository();
-        this.referenciaRepo = new ReferenciaRepository();
         this.carregamentoRepo = new CarregamentoRepository();
         this.pedidoRepo = new PedidoReposicaoRepository();
         this.modeloRepo = new ModeloRepository();
         this.passeRepo = new PasseRepository();
         this.reposicaoRepo = new ReposicaoRepository();
+        this.tipoDePasseRepo = new TipoDePasseRepository();
     }
 
     // Métodos de transação
@@ -61,18 +61,20 @@ public class JPAContext implements IContext {
 
     @Override
     public void beginTransaction(IsolationLevel isolationLevel) {
-        Session session = em.unwrap(Session.class);
+        Session session =em.unwrap(Session.class);
         DatabaseLogin databaseLogin = (DatabaseLogin) session.getDatasourceLogin();
-        int isolation = 2;
-        if (isolationLevel == IsolationLevel.READ_UNCOMMITTED) {
-            isolation = 1;
-        } else if (isolationLevel == IsolationLevel.REPEATABLE_READ) {
-            isolation = 4;
-        } else if (isolationLevel == IsolationLevel.SERIALIZABLE) {
-            isolation = 8;
-        }
+        System.out.println(databaseLogin.getTransactionIsolation());
+
+        int isolation = DatabaseLogin.TRANSACTION_READ_COMMITTED;
+        if(isolationLevel == IsolationLevel.READ_UNCOMMITTED)
+            isolation = DatabaseLogin.TRANSACTION_READ_UNCOMMITTED;
+        else if(isolationLevel == IsolationLevel.REPEATABLE_READ)
+            isolation = DatabaseLogin.TRANSACTION_REPEATABLE_READ;
+        else if(isolationLevel == IsolationLevel.SERIALIZABLE)
+            isolation = DatabaseLogin.TRANSACTION_SERIALIZABLE;
+
         databaseLogin.setTransactionIsolation(isolation);
-        this.beginTransaction();
+        beginTransaction();
     }
 
     @Override
@@ -92,7 +94,7 @@ public class JPAContext implements IContext {
     public void clear() { em.clear(); }
 
     @Override
-    public void persist() { em.flush(); }
+    public void persist(Object entity) { em.persist(entity); }
 
     // Getters dos repositórios
     @Override
@@ -114,9 +116,6 @@ public class JPAContext implements IContext {
     public IDocaRepository getDocas() { return docaRepo; }
 
     @Override
-    public IReferenciaRepository getReferencias() { return referenciaRepo; }
-
-    @Override
     public ICarregamentoRepository getCarregamentos() { return carregamentoRepo; }
 
     @Override
@@ -130,6 +129,9 @@ public class JPAContext implements IContext {
 
     @Override
     public IReposicaoRepository getReposicoes() { return reposicaoRepo; }
+
+    @Override
+    public ITipoDePasseRepository getTipoDePasses() { return tipoDePasseRepo; }
 
     @Override
     public void close() {
@@ -168,7 +170,6 @@ public class JPAContext implements IContext {
         return entity;
     }
 
-    // Repositórios internos usando os helpers e nomes das interfaces
     protected class EstacaoRepository implements IEstacaoRepository {
         @Override
         public Estacao findByKey(Integer key) {
@@ -190,10 +191,15 @@ public class JPAContext implements IContext {
 
     protected class ViagemRepository implements IViagemRepository {
         @Override
-        public Viagem findByKey(Integer key) {
+        public Viagem findByKey(ViagemPK key) {
             return em.createNamedQuery("Viagem.findByKey", Viagem.class)
-                    .setParameter("nif", key)
+                    .setParameter("dinitial", key.getDinitial())
+                    .setParameter("scooter", key.getScooter())
                     .getSingleResult();
+        }
+        @Override
+        public List<Viagem> findAll() {
+            return em.createNamedQuery("Viagem.findAll", Viagem.class).getResultList();
         }
         @Override
         public List<Viagem> find(String jpql, Object... params) {
@@ -215,6 +221,10 @@ public class JPAContext implements IContext {
                     .getSingleResult();
         }
         @Override
+        public List<Trotineta> findAll() {
+            return em.createNamedQuery("Trotineta.findAll", Trotineta.class).getResultList();
+        }
+        @Override
         public List<Trotineta> find(String jpql, Object... params) {
             return helperQueryImpl(jpql, Trotineta.class, params);
         }
@@ -230,7 +240,7 @@ public class JPAContext implements IContext {
         @Override
         public Utilizador findByKey(String key) {
             return em.createNamedQuery("Utilizador.findByKey", Utilizador.class)
-                    .setParameter("nif", key)
+                    .setParameter("id", key)
                     .getSingleResult();
         }
         @Override
@@ -249,7 +259,7 @@ public class JPAContext implements IContext {
         @Override
         public Funcionario findByKey(String key) {
             return em.createNamedQuery("Funcionario.findByKey", Funcionario.class)
-                    .setParameter("nif", key)
+                    .setParameter("personId", key)
                     .getSingleResult();
         }
         @Override
@@ -268,8 +278,12 @@ public class JPAContext implements IContext {
         @Override
         public Doca findByKey(Integer key) {
             return em.createNamedQuery("Doca.findByKey", Doca.class)
-                    .setParameter("id", key)
+                    .setParameter("number", key)
                     .getSingleResult();
+        }
+        @Override
+        public List<Doca> findAll() {
+            return em.createNamedQuery("Doca.findAll", Doca.class).getResultList();
         }
         @Override
         public List<Doca> find(String jpql, Object... params) {
@@ -281,25 +295,6 @@ public class JPAContext implements IContext {
         public Doca Update(Doca entity) { return helperUpdate(entity); }
         @Override
         public Doca Delete(Doca entity) { return helperDelete(entity); }
-    }
-
-    protected class ReferenciaRepository implements IReferenciaRepository {
-        @Override
-        public Referencia findByKey(Integer key) {
-            return em.createNamedQuery("Referencia.findByKey", Referencia.class)
-                    .setParameter("id", key)
-                    .getSingleResult();
-        }
-        @Override
-        public List<Referencia> find(String jpql, Object... params) {
-            return helperQueryImpl(jpql, Referencia.class, params);
-        }
-        @Override
-        public Referencia Create(Referencia entity) { return helperCreate(entity); }
-        @Override
-        public Referencia Update(Referencia entity) { return helperUpdate(entity); }
-        @Override
-        public Referencia Delete(Referencia entity) { return helperDelete(entity); }
     }
 
     protected class CarregamentoRepository implements ICarregamentoRepository {
@@ -323,9 +318,10 @@ public class JPAContext implements IContext {
 
     protected class PedidoReposicaoRepository implements IPedidoReposicaoRepository {
         @Override
-        public PedidoReposicao findByKey(Integer key) {
+        public PedidoReposicao findByKey(PedidoReposicaoId key) {
             return em.createNamedQuery("PedidoReposicao.findByKey", PedidoReposicao.class)
-                    .setParameter("id", key)
+                    .setParameter("dorder", key.getDorder())
+                    .setParameter("station", key.getStation())
                     .getSingleResult();
         }
         @Override
@@ -344,7 +340,7 @@ public class JPAContext implements IContext {
         @Override
         public Modelo findByKey(Integer key) {
             return em.createNamedQuery("Modelo.findByKey", Modelo.class)
-                    .setParameter("id", key)
+                    .setParameter("number", key)
                     .getSingleResult();
         }
         @Override
@@ -382,7 +378,7 @@ public class JPAContext implements IContext {
         @Override
         public Reposicao findByKey(Integer key) {
             return em.createNamedQuery("Reposicao.findByKey", Reposicao.class)
-                    .setParameter("numero", key)
+                    .setParameter("number", key)
                     .getSingleResult();
         }
         @Override
@@ -395,5 +391,24 @@ public class JPAContext implements IContext {
         public Reposicao Update(Reposicao entity) { return helperUpdate(entity); }
         @Override
         public Reposicao Delete(Reposicao entity) { return helperDelete(entity); }
+    }
+
+    protected class TipoDePasseRepository implements ITipoDePasseRepository {
+        @Override
+        public TipoDePasse findByKey(String key) {
+            return em.createNamedQuery("TipoDePasse.findByKey", TipoDePasse.class)
+                    .setParameter("reference", key)
+                    .getSingleResult();
+        }
+        @Override
+        public List<TipoDePasse> find(String jpql, Object... params) {
+            return helperQueryImpl(jpql, TipoDePasse.class, params);
+        }
+        @Override
+        public TipoDePasse Create(TipoDePasse entity) { return helperCreate(entity); }
+        @Override
+        public TipoDePasse Update(TipoDePasse entity) { return helperUpdate(entity); }
+        @Override
+        public TipoDePasse Delete(TipoDePasse entity) { return helperDelete(entity); }
     }
 }

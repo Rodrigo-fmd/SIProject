@@ -3,7 +3,6 @@ package isel.sisinf.model.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-/// /////////
 @Data
 @Entity
 @Table(name = "STATION")
