@@ -1,6 +1,6 @@
 package isel.sisinf.model.interfaces;
 
-public interface IUtilizador {
+public interface IPessoa {
     int getId();
     void setId(int id);
 

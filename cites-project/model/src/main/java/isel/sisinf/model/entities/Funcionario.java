@@ -1,5 +1,6 @@
 package isel.sisinf.model.entities;
 
+import isel.sisinf.model.interfaces.IFuncionario;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,13 +11,17 @@ import lombok.Data;
         name = "Funcionario.findByKey",
         query = "SELECT f FROM Funcionario f WHERE f.person.id = :personId"
 )
-public class Funcionario {
+public class Funcionario implements IFuncionario {
     @Id
-    @OneToOne(optional = false)
-    @JoinColumn(name = "person", referencedColumnName = "id")
-    private Utilizador person;
+    @Column(name = "person")
+    private int person;
 
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer number;
+
+    @Override
+    public void setNumber(int number) {
+        this.number = number;
+    }
 }

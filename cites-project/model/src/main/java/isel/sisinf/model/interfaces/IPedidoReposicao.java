@@ -1,5 +1,7 @@
 package isel.sisinf.model.interfaces;
 
+import isel.sisinf.model.entities.Estacao;
+
 import java.sql.Timestamp;
 
 public interface IPedidoReposicao {
@@ -12,6 +14,6 @@ public interface IPedidoReposicao {
     int getRoccupation();
     void setRoccupation(int roccupation);
 
-    int getStation();
-    void setStation(int station);
+    void setStation(Estacao station);
+    Estacao getStation();
 }

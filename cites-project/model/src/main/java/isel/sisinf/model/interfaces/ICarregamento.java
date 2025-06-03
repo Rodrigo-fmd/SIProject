@@ -7,8 +7,8 @@ public interface ICarregamento {
     Timestamp getDttopup();
     void setDttopup(Timestamp dttopup);
 
-    ICartao getCard();
-    void setCard(ICartao card);
+    IPasse getCard();
+    void setCard(IPasse card);
 
     BigDecimal getValue();
     void setValue(BigDecimal value);

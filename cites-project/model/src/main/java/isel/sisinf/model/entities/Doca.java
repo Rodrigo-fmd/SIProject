@@ -1,7 +1,12 @@
 package isel.sisinf.model.entities;
 
+import isel.sisinf.model.interfaces.IDoca;
+import isel.sisinf.model.interfaces.IEstacao;
+import isel.sisinf.model.interfaces.ITrotineta;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -14,7 +19,7 @@ import lombok.Data;
         name = "Doca.findAll",
         query = "SELECT d FROM Doca d"
 )
-public class Doca {
+public class Doca implements IDoca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int number;
@@ -31,5 +36,25 @@ public class Doca {
     private Trotineta scooter;
 
     @Column
-    private java.sql.Timestamp version;
+    private Timestamp version;
+
+    @Override
+    public IEstacao getStation() {
+        return station;
+    }
+
+    @Override
+    public void setStation(IEstacao station) {
+        this.station = (Estacao) station;
+    }
+
+    @Override
+    public ITrotineta getScooter() {
+        return scooter;
+    }
+
+    @Override
+    public void setScooter(ITrotineta scooter) {
+        this.scooter = (Trotineta) scooter;
+    }
 }

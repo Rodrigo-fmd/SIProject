@@ -238,21 +238,21 @@ public class JPAContext implements IContext {
 
     protected class UtilizadorRepository implements IUtilizadorRepository {
         @Override
-        public Utilizador findByKey(String key) {
-            return em.createNamedQuery("Utilizador.findByKey", Utilizador.class)
+        public Pessoa findByKey(String key) {
+            return em.createNamedQuery("Utilizador.findByKey", Pessoa.class)
                     .setParameter("id", key)
                     .getSingleResult();
         }
         @Override
-        public List<Utilizador> find(String jpql, Object... params) {
-            return helperQueryImpl(jpql, Utilizador.class, params);
+        public List<Pessoa> find(String jpql, Object... params) {
+            return helperQueryImpl(jpql, Pessoa.class, params);
         }
         @Override
-        public Utilizador Create(Utilizador entity) { return helperCreate(entity); }
+        public Pessoa Create(Pessoa entity) { return helperCreate(entity); }
         @Override
-        public Utilizador Update(Utilizador entity) { return helperUpdate(entity); }
+        public Pessoa Update(Pessoa entity) { return helperUpdate(entity); }
         @Override
-        public Utilizador Delete(Utilizador entity) { return helperDelete(entity); }
+        public Pessoa Delete(Pessoa entity) { return helperDelete(entity); }
     }
 
     protected class FuncionarioRepository implements IFuncionarioRepository {

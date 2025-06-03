@@ -1,7 +1,11 @@
 package isel.sisinf.model.entities;
 
+import isel.sisinf.model.interfaces.ICarregamento;
+import isel.sisinf.model.interfaces.IPasse;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Data
@@ -9,24 +13,27 @@ import java.sql.Timestamp;
 @Table(name = "TOPUP")
 @NamedQuery(
         name = "Carregamento.findByKey",
-        query = "SELECT c FROM Carregamento c WHERE c.id = :id"
+        query = "SELECT c FROM Carregamento c WHERE c.dttopup = :dttopup AND c.card.id = :cardId"
 )
-public class Carregamento {
+public class Carregamento implements ICarregamento {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(nullable = false)
-    private Timestamp data;
-
-    @Column(nullable = false)
-    private int valor;
+    @Column(name = "dttopup", nullable = false)
+    private Timestamp dttopup;
 
     @ManyToOne
-    @JoinColumn(name = "scooter_id", referencedColumnName = "id")
-    private Trotineta trotineta;
+    @JoinColumn(name = "card", referencedColumnName = "id", nullable = false)
+    private Passe card;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_nif", referencedColumnName = "nif")
-    private Funcionario funcionario;
+    @Column(nullable = false)
+    private BigDecimal value;
+
+    @Override
+    public IPasse getCard() {
+        return card;
+    }
+
+    @Override
+    public void setCard(IPasse card) {
+        this.card = (Passe) card;
+    }
 }

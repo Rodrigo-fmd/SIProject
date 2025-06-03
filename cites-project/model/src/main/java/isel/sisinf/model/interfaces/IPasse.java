@@ -1,5 +1,8 @@
 package isel.sisinf.model.interfaces;
 
+import isel.sisinf.model.entities.Pessoa;
+import isel.sisinf.model.entities.TipoDePasse;
+
 import java.math.BigDecimal;
 
 public interface IPasse {
@@ -9,9 +12,9 @@ public interface IPasse {
     BigDecimal getCredit();
     void setCredit(BigDecimal credit);
 
-    String getTypeofcard();
-    void setTypeofcard(String typeofcard);
+    void setTypeofcard(TipoDePasse tipoDePasse);
+    TipoDePasse getTypeofcard();
 
-    int getClient();
-    void setClient(int client);
+    void setClient(Pessoa client);
+    Pessoa getClient();
 }

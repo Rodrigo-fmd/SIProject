@@ -1,7 +1,10 @@
 package isel.sisinf.model.entities;
 
+import isel.sisinf.model.interfaces.IEstacao;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -10,14 +13,14 @@ import lombok.Data;
         name = "Estacao.findByKey",
         query = "SELECT e FROM Estacao e WHERE e.id = :id"
 )
-public class Estacao {
+public class Estacao implements IEstacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(precision = 6, scale = 4, nullable = false)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(precision = 6, scale = 4, nullable = false)
-    private Double longitude;
+    private BigDecimal longitude;
 }

@@ -1,5 +1,6 @@
 package isel.sisinf.model.entities;
 
+import isel.sisinf.model.interfaces.IViagem;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.sql.Timestamp;
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
         name = "Viagem.findAll",
         query = "SELECT v FROM Viagem v"
 )
-public class Viagem {
+public class Viagem implements IViagem {
     @Id
     @Column(nullable = false)
     private Timestamp dinitial;
@@ -35,7 +36,7 @@ public class Viagem {
 
     @ManyToOne
     @JoinColumn(name = "client", referencedColumnName = "person", nullable = false)
-    private Utilizador client;
+    private Pessoa client;
 
     @ManyToOne
     @JoinColumn(nullable = false)

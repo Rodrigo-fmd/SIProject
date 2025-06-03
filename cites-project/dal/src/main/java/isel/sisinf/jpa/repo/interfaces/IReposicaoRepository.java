@@ -2,7 +2,6 @@ package isel.sisinf.jpa.repo.interfaces;
 
 import isel.sisinf.jpa.repo.interfaces.datamapper.IDataMapper;
 import isel.sisinf.model.entities.Reposicao;
-import isel.sisinf.model.entities.Utilizador;
 
 import java.util.List;
 
