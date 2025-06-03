@@ -19,7 +19,6 @@ public interface IContext extends AutoCloseable {
     IEstacaoRepository getEstacoes();
     IViagemRepository getViagens();
     ITrotinetaRepository getTrotinetas();
-    IUtilizadorRepository getUtilizadores();
     IFuncionarioRepository getFuncionarios();
     IDocaRepository getDocas();
     ICarregamentoRepository getCarregamentos();
@@ -28,4 +27,5 @@ public interface IContext extends AutoCloseable {
     IPasseRepository getPasses();
     IReposicaoRepository getReposicoes();
     ITipoDePasseRepository getTipoDePasses();
+    IPessoaRepository getPessoas();
 }

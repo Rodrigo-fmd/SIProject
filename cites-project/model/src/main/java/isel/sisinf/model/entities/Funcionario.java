@@ -9,7 +9,7 @@ import lombok.Data;
 @Table(name = "EMPLOYEE")
 @NamedQuery(
         name = "Funcionario.findByKey",
-        query = "SELECT f FROM Funcionario f WHERE f.person.id = :personId"
+        query = "SELECT f FROM Funcionario f WHERE f.person = :personId"
 )
 public class Funcionario implements IFuncionario {
     @Id
@@ -18,10 +18,5 @@ public class Funcionario implements IFuncionario {
 
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer number;
-
-    @Override
-    public void setNumber(int number) {
-        this.number = number;
-    }
+    private int number;
 }

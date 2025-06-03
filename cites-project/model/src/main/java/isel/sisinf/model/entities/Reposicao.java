@@ -19,7 +19,7 @@ public class Reposicao implements IReposicao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int number;
 
-    @Column(, nullable = false)
+    @Column(nullable = false)
     private Timestamp dreplacement;
 
     @Column(length = 8)

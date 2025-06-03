@@ -17,7 +17,7 @@ public class JPAContext implements IContext {
     private final IEstacaoRepository estacaoRepo;
     private final IViagemRepository viagemRepo;
     private final ITrotinetaRepository trotinetaRepo;
-    private final IUtilizadorRepository utilizadorRepo;
+    private final IPessoaRepository pessoaRepo;
     private final IFuncionarioRepository funcionarioRepo;
     private final IDocaRepository docaRepo;
     private final ICarregamentoRepository carregamentoRepo;
@@ -37,7 +37,7 @@ public class JPAContext implements IContext {
         this.estacaoRepo = new EstacaoRepository();
         this.viagemRepo = new ViagemRepository();
         this.trotinetaRepo = new TrotinetaRepository();
-        this.utilizadorRepo = new UtilizadorRepository();
+        this.pessoaRepo = new PessoaRepository();
         this.funcionarioRepo = new FuncionarioRepository();
         this.docaRepo = new DocaRepository();
         this.carregamentoRepo = new CarregamentoRepository();
@@ -107,7 +107,7 @@ public class JPAContext implements IContext {
     public ITrotinetaRepository getTrotinetas() { return trotinetaRepo; }
 
     @Override
-    public IUtilizadorRepository getUtilizadores() { return utilizadorRepo; }
+    public IPessoaRepository getPessoas() { return pessoaRepo; }
 
     @Override
     public IFuncionarioRepository getFuncionarios() { return funcionarioRepo; }
@@ -236,7 +236,7 @@ public class JPAContext implements IContext {
         public Trotineta Delete(Trotineta entity) { return helperDelete(entity); }
     }
 
-    protected class UtilizadorRepository implements IUtilizadorRepository {
+    protected class PessoaRepository implements IPessoaRepository {
         @Override
         public Pessoa findByKey(String key) {
             return em.createNamedQuery("Utilizador.findByKey", Pessoa.class)
@@ -301,7 +301,7 @@ public class JPAContext implements IContext {
         @Override
         public Carregamento findByKey(Integer key) {
             return em.createNamedQuery("Carregamento.findByKey", Carregamento.class)
-                    .setParameter("id", key)
+                    .setParameter("dttopup", key)
                     .getSingleResult();
         }
         @Override

@@ -19,7 +19,7 @@ public class TipoDePasse implements ITipoDePasse {
     private String reference;
 
     @Column(nullable = false)
-    private Integer nodays;
+    private int nodays;
 
     @Column(nullable = false, precision = 4, scale = 2)
     private BigDecimal price;
