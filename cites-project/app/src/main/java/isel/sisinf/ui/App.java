@@ -231,7 +231,8 @@ class UI
 
     private void about()
     {
-        // TODO: Add your Group ID & member names
+        System.out.println("Group number: 41");
+        System.out.println("Group members: Tomás Fonseca, Tiago Gonçalves, Rodrigo Duarte");
         System.out.println("DAL version:"+ Dal.version());
         System.out.println("Core version:"+ isel.sisinf.model.Core.version());
         
