@@ -13,6 +13,10 @@ import java.math.BigDecimal;
         name = "Estacao.findByKey",
         query = "SELECT e FROM Estacao e WHERE e.id = :id"
 )
+@NamedQuery(
+        name = "Estacao.findAll",
+        query = "SELECT e FROM Estacao e"
+)
 public class Estacao implements IEstacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

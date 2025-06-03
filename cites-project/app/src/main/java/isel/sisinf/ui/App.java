@@ -25,11 +25,9 @@ package isel.sisinf.ui;
 
 import isel.sisinf.jpa.Dal;
 import isel.sisinf.jpa.repo.JPAContext;
-import isel.sisinf.model.entities.Cliente;
-import isel.sisinf.model.entities.Doca;
-import isel.sisinf.model.entities.Passe;
-import isel.sisinf.model.entities.Pessoa;
+import isel.sisinf.model.entities.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -186,6 +184,7 @@ class UI
   
     private void listCostumer()
     {
+        System.out.println("listCostumer()");
         ctxt.beginTransaction();
         List<Cliente> clientes = ctxt.getClientes().findAll();
 
@@ -208,25 +207,143 @@ class UI
         }
 
         ctxt.commit();
-        System.out.println("listCostumer()");
     }
 
-    private void listDocks()
-    {
-        // TODO()
-        System.out.println("listDocks()");
+    private void listDocks() {
+        System.out.println("Ocupação das Estações:");
+        JPAContext ctx = new JPAContext();
+        try {
+            List<Estacao> estacoes = ctx.getEstacoes().findAll();
+            System.out.printf("%-12s %-15s%n", "EstacaoID", "Ocupação");
+            for (Estacao estacao : estacoes) {
+                // Chama a função SQL fx-dock-occupancy via native query
+                Double ocupacao = (Double) ctx.getEntityManager()
+                        .createNativeQuery("SELECT fx_dock_occupancy(?1)")
+                        .setParameter(1, estacao.getId())
+                        .getSingleResult();
+                System.out.printf("%-12d %-15.2f%n", estacao.getId(), ocupacao);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao listar ocupação das estações: " + e.getMessage());
+        } finally {
+            ctx.close();
+        }
     }
 
     private void startTrip() {
-        // TODO
-        System.out.println("startTrip()");
-    }
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("ID da doca: ");
+        int dockId = scanner.nextInt();
+        System.out.print("ID do cliente: ");
+        int clientId = scanner.nextInt();
 
-    private void parkScooter()
-    {
-        // TODO
+        JPAContext ctx = new JPAContext();
+        try {
+            ctx.beginTransaction();
+
+            // Buscar a doca
+            Doca doca = ctx.getDocas().findByKey(dockId);
+
+            // Verificar se a doca está ocupada
+            if (!"occupy".equalsIgnoreCase(doca.getState()) || doca.getScooter() == null) {
+                System.out.println("A doca não está ocupada ou não tem trotineta.");
+                ctx.commit();
+                ctx.close();
+                return;
+            }
+
+            // Guardar versão para optimistic locking
+            Timestamp oldVersion = doca.getVersion();
+            Timestamp newVersion = new Timestamp(System.currentTimeMillis());
+
+            // Atualizar doca para livre
+            int updated = ctx.getDocas().updateDockWithScooter(
+                    dockId, null, "free", newVersion, oldVersion
+            );
+
+            if (updated == 0) {
+                System.out.println("Falha no locking otimista: a doca foi alterada por outro utilizador.");
+                ctx.commit();
+                ctx.close();
+                return;
+            }
+
+            // Inserir viagem usando setters
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            Viagem viagem = new Viagem();
+            viagem.setDinitial(now);
+            // Obter o Cliente
+            Cliente cliente = ctx.getClientes().findByKey(clientId);
+            Pessoa pessoa = ctx.getPessoas().findByKey(cliente.getPerson());
+            viagem.setClient(pessoa);
+
+            // Obter a trotineta
+            int scooterId = doca.getScooter().getId();
+            Trotineta trotineta = ctx.getTrotinetas().findByKey(scooterId);
+            viagem.setScooter(trotineta);
+
+            // Obter a estação inicial
+            int stationId = doca.getStation().getId();
+            Estacao estacao = ctx.getEstacoes().findByKey(stationId);
+            viagem.setStinitial(estacao);
+
+            ctx.getViagens().Create(viagem);
+
+            ctx.commit();
+            System.out.println("Viagem iniciada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao iniciar viagem: " + e.getMessage());
+        } finally {
+            ctx.close();
+        }
+    }
+    private void parkScooter() {
         System.out.println("parkScooter()");
-        
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("ID da doca: ");
+        int dockId = scanner.nextInt();
+        System.out.print("ID da trotineta: ");
+        int scooterId = scanner.nextInt();
+
+        JPAContext ctx = new JPAContext();
+        try {
+            ctx.beginTransaction();
+
+            // Buscar a doca e a trotineta
+            Doca doca = ctx.getDocas().findByKey(dockId);
+            Trotineta trotineta = ctx.getTrotinetas().findByKey(scooterId);
+
+            // Verificar se a doca está livre
+            if (!"free".equalsIgnoreCase(doca.getState())) {
+                System.out.println("A doca não está livre.");
+                ctx.commit();
+                ctx.close();
+                return;
+            }
+
+            // Guardar versão para optimistic locking
+            Timestamp oldVersion = doca.getVersion();
+            Timestamp newVersion = new Timestamp(System.currentTimeMillis());
+
+            // Atualizar doca
+            int updated = ctx.getDocas().updateDockWithScooter(
+                    dockId, trotineta, "occupy", newVersion, oldVersion
+            );
+
+            if (updated == 0) {
+                System.out.println("Falha no locking otimista: a doca foi alterada por outro utilizador.");
+                ctx.commit();
+                ctx.close();
+                return;
+            }
+
+            ctx.commit();
+            System.out.println("Trotineta estacionada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao estacionar trotineta: " + e.getMessage());
+        } finally {
+            ctx.close();
+        }
     }
 
     private void about()

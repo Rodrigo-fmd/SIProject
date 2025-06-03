@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.eclipse.persistence.sessions.DatabaseLogin;
 import org.eclipse.persistence.sessions.Session;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class JPAContext implements IContext {
@@ -33,6 +34,7 @@ public class JPAContext implements IContext {
     }
 
     public JPAContext(String persistenceCtx) {
+        super();
         this.emf = Persistence.createEntityManagerFactory(persistenceCtx);
         this.em = emf.createEntityManager();
         this.estacaoRepo = new EstacaoRepository();
@@ -183,6 +185,10 @@ public class JPAContext implements IContext {
                     .getSingleResult();
         }
         @Override
+        public List<Estacao> findAll() {
+            return em.createNamedQuery("Estacao.findAll", Estacao.class).getResultList();
+        }
+        @Override
         public List<Estacao> find(String jpql, Object... params) {
             return helperQueryImpl(jpql, Estacao.class, params);
         }
@@ -243,7 +249,7 @@ public class JPAContext implements IContext {
 
     protected class PessoaRepository implements IPessoaRepository {
         @Override
-        public Pessoa findByKey(String key) {
+        public Pessoa findByKey(Integer key) {
             return em.createNamedQuery("Utilizador.findByKey", Pessoa.class)
                     .setParameter("id", key)
                     .getSingleResult();
@@ -285,6 +291,18 @@ public class JPAContext implements IContext {
             return em.createNamedQuery("Doca.findByKey", Doca.class)
                     .setParameter("number", key)
                     .getSingleResult();
+        }
+        @Override
+        public int updateDockWithScooter(int dockId, Trotineta trotineta, String state, Timestamp newVersion, Timestamp oldVersion) {
+            return em.createQuery(
+                            "UPDATE Doca d SET d.scooter = :scooter, d.state = :state, d.version = :version WHERE d.number = :number AND d.version = :oldVersion"
+                    )
+                    .setParameter("scooter", trotineta)
+                    .setParameter("state", state)
+                    .setParameter("version", newVersion)
+                    .setParameter("number", dockId)
+                    .setParameter("oldVersion", oldVersion)
+                    .executeUpdate();
         }
         @Override
         public List<Doca> findAll() {
@@ -438,5 +456,9 @@ public class JPAContext implements IContext {
         public Cliente Update(Cliente entity) { return helperUpdate(entity); }
         @Override
         public Cliente Delete(Cliente entity) { return helperDelete(entity); }
+    }
+
+    public EntityManager getEntityManager() {
+        return em;
     }
 }

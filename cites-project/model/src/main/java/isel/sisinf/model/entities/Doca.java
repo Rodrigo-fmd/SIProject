@@ -8,6 +8,14 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 
+@NamedStoredProcedureQuery(
+        name = "startTrip",
+        procedureName = "startTrip",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "dockid", type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "clientid", type = Integer.class)
+        }
+)
 @Data
 @Entity
 @Table(name = "DOCK")
